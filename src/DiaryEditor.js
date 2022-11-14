@@ -1,10 +1,11 @@
-import { useState } from "react";
+import {useRef, useState } from "react";
 import App from './App';
 
 //author: 작가 어써
 const DirayEditor=()=>{
+    const authorInput=useRef();
+    const contentInput=useRef();
     //글쓴이의 값을 스테이터스로 활용하기 위해 useState 사용
-    
     //아래의 2개를 한개로 합쳐서 사용
     const [state, setState]=useState({
         author:"",
@@ -45,15 +46,33 @@ const DirayEditor=()=>{
 
 
     const handleSubmit=(e)=>{
-        console.log(e.target.value);
-        console.log(state);
+        //강의와 다른부분
+        let sizeAuthor=state.author.length;
+        let sizeContent=state.content.length;
+        let msg;
+
+        if(sizeAuthor<1){
+            msg="작성자를 최소 1글자를 입력";
+            alert(msg)
+            //current?? 유즈레퍼로 찾아온 돔 요소의 현재값을 가르키는 리턴값인가봐
+            authorInput.current.focus(); 
+            return;     //리턴하여 더이상 동작되지 않도록 세팅 
+        }
+        if(sizeContent<5){
+            msg="일기 본문은 최소 5글자 이상 입력해 주세요";
+            alert(msg);
+            contentInput.current.focus();
+            return
+        }
         alert("저장성공");
     }
+    // ref={authorInput} 해주면 알아서 리액트가 돔요소를 가지고 온데 똑똑하구만 
     return(
         <div className="DiaryEditor">
            <h2>오늘의 일기</h2> 
            <div>
                 <input 
+                    ref={authorInput}
                     name="author"
                     value={state.author} 
                     onChange={
@@ -63,6 +82,7 @@ const DirayEditor=()=>{
            </div>
            <div> 
             <textarea
+                ref={contentInput}
                 name="content"
                 value={state.content} 
                 onChange={
