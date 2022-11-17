@@ -2,7 +2,7 @@ import {useRef, useState } from "react";
 import App from './App';
 
 //author: 작가 어써
-const DirayEditor=()=>{
+const DirayEditor=({onCreate})=>{
     const authorInput=useRef();
     const contentInput=useRef();
     //글쓴이의 값을 스테이터스로 활용하기 위해 useState 사용
@@ -64,6 +64,7 @@ const DirayEditor=()=>{
             contentInput.current.focus();
             return
         }
+        onCreate(state.author, state.content, state.emotion);
         alert("저장성공");
     }
     // ref={authorInput} 해주면 알아서 리액트가 돔요소를 가지고 온데 똑똑하구만 
