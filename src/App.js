@@ -57,10 +57,21 @@ function App() {
     //[나는 객체또는 배열사용하니까 꼭 []을 잊지말자@!@ 제발 ㅠㅠ]
   };
 
+  const onDelete=(targetId)=>{
+    console.log(`${targetId}가 삭제 `);
+    const newDiaryList= data.filter((it)=> it.id!==targetId);
+    //필터로 새로운 배열을 바로 만들어 주었음
+    //위에서 받은 인자 타켓아이디가 id와 같지 않다면 배열을 새로 만들어줘 
+    //이걸 위에 셋함수에 어레이를 다시 보내줌
+    setData(newDiaryList);
+    //console.log(newDiaryList);
+  };
+
+
   return (
     <div className="App">
       <DirayEditor onCreate={onCreate}/>
-      <DiaryList diaryList={data}/>
+      <DiaryList onDelete={onDelete} diaryList={data}/>
     </div>
   );
 }
