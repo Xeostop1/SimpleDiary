@@ -1,7 +1,7 @@
 import "./App.css";
 import DirayEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRef } from "react";
 import Lifecycle from "./Lifecycle";
 
@@ -41,11 +41,35 @@ import Lifecycle from "./Lifecycle";
 
 function App() {
   const [data, setData] = useState([]);
-  const dateId = useRef(0);
+  const dataId = useRef(0);
 
-  //더미json에서 데이터 추출 =()=>{
-    
-  }
+  //더미json에서 데이터 추출
+  //async?! 프로미스를 사용한다
+  const getData = async () => {
+    // 패치로 필요한 주소를 넣어준다
+    const res = await fetch(
+      "https://jsonplaceholder.typicode.com/comments"
+    ).then((res) => res.json());
+
+    //슬라이스로 0~19인덱스 까지만 가져옴
+    //이모션은 바로 콜백함수에서 랜덤화 시켜서 넣기
+    const initData = res.slice(0, 20).map((it) => {
+      let emotionNum = Math.floor(Math.random() * 5) + 1; //0부터 시작해서 +1 해줌
+      let newDate = new Date().getTime();
+      return {
+        author: it.email,
+        content: it.body,
+        emotion: emotionNum,
+        created_date: newDate,
+        id: dataId.current++,
+      };
+    });
+    setData(initData);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   const onCreate = (author, content, emotion) => {
     const created_date = new Date().getTime();
@@ -54,9 +78,9 @@ function App() {
       content,
       emotion,
       created_date,
-      id: dateId.current,
+      id: dataId.current,
     };
-    dateId.current += 1;
+    dataId.current += 1;
     setData([newItem, ...data]);
     //뉴아이템을 먼저 보여주고, 기존 데이터들을(useState에 사용한) 나중에 세팅
     //[나는 객체또는 배열사용하니까 꼭 []을 잊지말자@!@ 제발 ㅠㅠ]
