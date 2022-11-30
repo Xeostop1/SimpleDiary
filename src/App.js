@@ -5,6 +5,9 @@ import { useState } from "react";
 import { useRef } from "react";
 import Lifecycle from "./Lifecycle";
 
+//더미데이타 api로 호출하기
+//https://jsonplaceholder.typicode.com/comments
+
 // const dummyList=[
 //   {
 //     id:1,
@@ -38,8 +41,11 @@ import Lifecycle from "./Lifecycle";
 
 function App() {
   const [data, setData] = useState([]);
-
   const dateId = useRef(0);
+
+  //더미json에서 데이터 추출 =()=>{
+    
+  }
 
   const onCreate = (author, content, emotion) => {
     const created_date = new Date().getTime();

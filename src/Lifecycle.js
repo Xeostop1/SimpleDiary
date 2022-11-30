@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from "react";
 
-const unmountTest = () => {
+const UnmountTest = () => {
+  useEffect(()=>{
+    console.log("monut!");
+
+    //리턴되는 함수는 unmount되는 시점에 실행됨
+    return ()=>{
+      console.log("nuMonut**");
+    }
+  },[]);
   return <div>unmount Testing component</div>;
 };
 
 const Lifecycle = () => {
   const [isVisible, setIsVisible] = useState(false);
   const toggle = () => {
-    setIsVisible(!isVisible);
-  };
-  return (
+    setIsVisible(!isVisible)};
+  
+    return (
     <div style={{ padding: 20 }}>
       <div>
         <button onClick={toggle}>on/OFF</button>
-        {isVisible}
+        {isVisible && <UnmountTest/>}
       </div>
     </div>
   );
