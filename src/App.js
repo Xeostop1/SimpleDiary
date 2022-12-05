@@ -3,6 +3,7 @@ import DirayEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
 import { useMemo ,useEffect, useState } from "react";
 import { useRef } from "react";
+// import OptimizeTest from "./OptimizeTest";
 // import Lifecycle from "./Lifecycle";
 
 //더미데이타 api로 호출하기
@@ -87,7 +88,7 @@ function App() {
   };
 
   const onRemove = (targetId) => {
-    console.log(`${targetId}가 삭제 `);
+    console.log(`onRemove에서 ${targetId}가 삭제  `);
     const newDiaryList = data.filter((it) => it.id !== targetId);
     //필터로 새로운 배열을 바로 만들어 주었음
     //위에서 받은 인자 타켓아이디가 id와 같지 않다면 배열을 새로 만들어줘
@@ -111,7 +112,7 @@ function App() {
   };
 
   const getDiaryAnalysis=useMemo(()=>{
-    console.log("일기분석 시작");
+    console.log("에널리스트 일기분석 시작");
     const totalData=data.length;
     const goodCount=data.filter((it)=>it.emotion>=3).length;
     const badCount=totalData-goodCount
@@ -141,4 +142,4 @@ function App() {
 //배열을 프롭으로 전달
 
 export default App;
-//useMemo로 값 만을 계속 보내줌 
+//useMemo로 값 만을 계속 보내줌 → 연산최적화
