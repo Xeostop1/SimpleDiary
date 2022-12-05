@@ -1,7 +1,7 @@
 import "./App.css";
 import DirayEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRef } from "react";
 // import OptimizeTest from "./OptimizeTest";
 // import Lifecycle from "./Lifecycle";
@@ -72,7 +72,9 @@ function App() {
     getData();
   }, []);
 
-  const onCreate = (author, content, emotion) => {
+  //useCallback 의존배열이 변화가 있다면 안의 콜백함수가 변화한다
+  //마운트(최초생성)되었을 때 1번만 만들고 그뒤로는 재사용할 수 있도록 세팅 (useCallback)
+  const onCreate = useCallback((author, content, emotion) => {
     const created_date = new Date().getTime();
     const newItem = {
       author,
@@ -82,34 +84,40 @@ function App() {
       id: dataId.current,
     };
     dataId.current += 1;
-    setData([newItem, ...data]);
+    //setData([newItem, ...data]);
     //뉴아이템을 먼저 보여주고, 기존 데이터들을(useState에 사용한) 나중에 세팅
     //[나는 객체또는 배열사용하니까 꼭 []을 잊지말자@!@ 제발 ㅠㅠ]
-  };
 
-  const onRemove = (targetId) => {
+    //setData부분에 함수형을 전달하여 사용
+    setData((data) => [newItem, ...data]);
+  }, []);
+
+  const onRemove = useCallback((targetId) => {
     console.log(`onRemove에서 ${targetId}가 삭제  `);
-    const newDiaryList = data.filter((it) => it.id !== targetId);
+    //const newDiaryList = data.filter((it) => it.id !== targetId);
     //필터로 새로운 배열을 바로 만들어 주었음
     //위에서 받은 인자 타켓아이디가 id와 같지 않다면 배열을 새로 만들어줘
     //이걸 위에 셋함수에 어레이를 다시 보내줌
-    setData(newDiaryList);
+
+    //셋데이터함수 임자로 최신 스테이터스를 이용하기 위해서는 함수형 업데이트에 인자부분으 사용 리턴 부분을 사용함
+    setData((data) => data.filter((it) => it.id !== targetId));
     //console.log(newDiaryList);
-  };
+  }, []);
 
   //여기에 매개변수를 쓰는 이유? 자식이 어떤 데이터를 보낼 지 모르니까(forgin_key 정도??)
   //맵을 통해 for처럼 순회하면서 새로운 배열을 만든다
-  const onEdit = (targetId, newContent) => {
+  const onEdit = useCallback((targetId, newContent) => {
     setData(
-      data.map((it) =>
-        it.id === targetId ? { ...it, content: newContent } : it
-      )
+      (data) =>
+        data.map((it) =>
+          it.id === targetId ? { ...it, content: newContent } : it
+        )
       //id가 수정하는 타켓의 id와 같다면 수정→
       // it의 모든 배열을 다불러오고 content는 newContente로 변경
       //: 이걸 왜쓰는지 모르네~
       //id가 맞지 않는다면 원래 있던 걸로 대체하겠음
     );
-  };
+  }, []);
   //useMemo 1인자 콜백함수, 배열전달(의존성배열이 변화가 있다면 콜백함수에 영향을 미친다) 배열에 변화가 없다면 더이상 계산하지 않고 같은 값을 보여줌
   //그런데 useMemo를 사용한다면 더이상 getDiaryAnalysis더이상 함수의 기능을 잃게됨 memoization 되었기 때문에 리턴값도 고정 함수(동작)으로의 기능을 잃게됨
   const getDiaryAnalysis = useMemo(() => {
@@ -136,7 +144,7 @@ function App() {
       <div>📖: {data.length}개</div>
       <div>HAPPY DAY : {goodRatio}%</div>
       <div>😊 : {goodCount}개</div>
-      <div>😑: {badCount}개</div>
+      <div>😑 : {badCount}개</div>
       <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
     </div>
   );
