@@ -1,8 +1,11 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import App from "./App";
 
 //author: 작가 어써
 const DirayEditor = ({ onCreate }) => {
+  useEffect(() => {
+    console.log("DiaryEditor 렌더:" );
+  });
   const authorInput = useRef();
   const contentInput = useRef();
   //글쓴이의 값을 스테이터스로 활용하기 위해 useState 사용
@@ -128,4 +131,6 @@ const DirayEditor = ({ onCreate }) => {
     });
 */
 
-export default DirayEditor;
+export default React.memo(DirayEditor);
+
+//export할때 React.memo로 묶인 컴포넌트를 익스포트함
