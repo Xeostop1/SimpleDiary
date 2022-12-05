@@ -1,9 +1,10 @@
 import "./App.css";
 import DirayEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
-import { useEffect, useState } from "react";
+import { useMemo ,useEffect, useState } from "react";
 import { useRef } from "react";
-import Lifecycle from "./Lifecycle";
+// import OptimizeTest from "./OptimizeTest";
+// import Lifecycle from "./Lifecycle";
 
 //더미데이타 api로 호출하기
 //https://jsonplaceholder.typicode.com/comments
@@ -87,7 +88,7 @@ function App() {
   };
 
   const onRemove = (targetId) => {
-    console.log(`${targetId}가 삭제 `);
+    console.log(`onRemove에서 ${targetId}가 삭제  `);
     const newDiaryList = data.filter((it) => it.id !== targetId);
     //필터로 새로운 배열을 바로 만들어 주었음
     //위에서 받은 인자 타켓아이디가 id와 같지 않다면 배열을 새로 만들어줘
@@ -110,10 +111,30 @@ function App() {
     );
   };
 
+  const getDiaryAnalysis=useMemo(()=>{
+    console.log("에널리스트 일기분석 시작");
+    const totalData=data.length;
+    const goodCount=data.filter((it)=>it.emotion>=3).length;
+    const badCount=totalData-goodCount
+    const goodRatio=(goodCount/totalData)*100;
+    return{goodCount, badCount, goodRatio};
+  },[data.length]
+  );
+  //데이터.length가 변화가 있을때만 함수의 변화가 있음 (리턴값이 변경)
+
+  //함수의 리턴값을 객체(비구조화 할당)로 받음
+  const {goodCount, badCount, goodRatio}=getDiaryAnalysis;
+
+  //useMemo는 리턴값만을 가져오기 때문에 함수형으로 쓰면 안된다
+
+
   return (
     <div className="App">
-      <Lifecycle />
       <DirayEditor onCreate={onCreate} />
+      <div>📖: {data.length}개</div>
+      <div>HAPPY DAY : {goodRatio}%</div>
+      <div>😊 : {goodCount}개</div>
+      <div>😑: {badCount}개</div>
       <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
     </div>
   );
@@ -121,3 +142,4 @@ function App() {
 //배열을 프롭으로 전달
 
 export default App;
+//useMemo로 값 만을 계속 보내줌 → 연산최적화
