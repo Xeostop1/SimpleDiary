@@ -1,7 +1,7 @@
 import "./App.css";
 import DirayEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
-import { useMemo ,useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRef } from "react";
 // import OptimizeTest from "./OptimizeTest";
 // import Lifecycle from "./Lifecycle";
@@ -110,23 +110,25 @@ function App() {
       //id가 맞지 않는다면 원래 있던 걸로 대체하겠음
     );
   };
+  //useMemo 1인자 콜백함수, 배열전달(의존성배열이 변화가 있다면 콜백함수에 영향을 미친다) 배열에 변화가 없다면 더이상 계산하지 않고 같은 값을 보여줌
+  //그런데 useMemo를 사용한다면 더이상 getDiaryAnalysis더이상 함수의 기능을 잃게됨 memoization 되었기 때문에 리턴값도 고정 함수(동작)으로의 기능을 잃게됨
+  const getDiaryAnalysis = useMemo(() => {
+    console.log("일기분석 시작");
 
-  const getDiaryAnalysis=useMemo(()=>{
-    console.log("에널리스트 일기분석 시작");
-    const totalData=data.length;
-    const goodCount=data.filter((it)=>it.emotion>=3).length;
-    const badCount=totalData-goodCount
-    const goodRatio=(goodCount/totalData)*100;
-    return{goodCount, badCount, goodRatio};
-  },[data.length]
-  );
+    const goodCount = data.filter((it) => it.emotion >= 3).length;
+    const badCount = data.length - goodCount; //나는 똑같이 ㅠㅠ 필터 걸고 >=2 해줌 ㅠㅠ 천잰데??
+    const goodRatio = (goodCount / data.length) * 100; //백분률
+    return { goodCount, badCount, goodRatio }; //객체로 리턴
+  }, [data.length]);
+
   //데이터.length가 변화가 있을때만 함수의 변화가 있음 (리턴값이 변경)
 
-  //함수의 리턴값을 객체(비구조화 할당)로 받음
-  const {goodCount, badCount, goodRatio}=getDiaryAnalysis;
+  //리턴값이 객체로 받아서 우리도 비구조화 할당으로 받았음
+  // const { goodCount, badCount, goodRatio } = getDiaryAnalysis();
+  //useMemo를 사용해서 더이상 함수로 작동하는게 아니라 리턴값을 이용하는것!
+  const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
 
   //useMemo는 리턴값만을 가져오기 때문에 함수형으로 쓰면 안된다
-
 
   return (
     <div className="App">
@@ -140,6 +142,20 @@ function App() {
   );
 }
 //배열을 프롭으로 전달
-
 export default App;
+
+/*memoization?? 연산의 최적화
+이미 계산 해본 연산 결과를 기억해 두었다가
+동일한 계산을 시키면 다시 연산하지않고 기억해 두었던 데이터를 반환 시키는방법
+오답노트에서 문제가 그대로 나왔다?! 개꿀 */
+
+/*
+이럴때 같이 사용 되는데 다른 기능이 리랜더 되어도 영향을 받지 않는곳이 계속 사용하면 메모리를 많이 잡아 먹으니까 
+값을 기억 시켜버림 useMemo사용
+    const goodCount = data.filter((it) => it.emotion >= 3).length;
+    const badCount = data.length - goodCount; //나는 똑같이 ㅠㅠ 필터 걸고 >=2 해줌 ㅠㅠ 천잰데??
+    const goodRatio = (goodCount / data.length) * 100; //백분률
+    return { goodCount, badCount, goodRatio }; //객체로 리턴
+  };
+*/
 //useMemo로 값 만을 계속 보내줌 → 연산최적화
