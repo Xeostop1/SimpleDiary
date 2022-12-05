@@ -3,7 +3,8 @@ import DirayEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
 import { useEffect, useMemo, useState } from "react";
 import { useRef } from "react";
-import Lifecycle from "./Lifecycle";
+// import OptimizeTest from "./OptimizeTest";
+// import Lifecycle from "./Lifecycle";
 
 //더미데이타 api로 호출하기
 //https://jsonplaceholder.typicode.com/comments
@@ -87,7 +88,7 @@ function App() {
   };
 
   const onRemove = (targetId) => {
-    console.log(`${targetId}가 삭제 `);
+    console.log(`onRemove에서 ${targetId}가 삭제  `);
     const newDiaryList = data.filter((it) => it.id !== targetId);
     //필터로 새로운 배열을 바로 만들어 주었음
     //위에서 받은 인자 타켓아이디가 id와 같지 않다면 배열을 새로 만들어줘
@@ -120,19 +121,22 @@ function App() {
     return { goodCount, badCount, goodRatio }; //객체로 리턴
   }, [data.length]);
 
+  //데이터.length가 변화가 있을때만 함수의 변화가 있음 (리턴값이 변경)
+
   //리턴값이 객체로 받아서 우리도 비구조화 할당으로 받았음
   // const { goodCount, badCount, goodRatio } = getDiaryAnalysis();
   //useMemo를 사용해서 더이상 함수로 작동하는게 아니라 리턴값을 이용하는것!
   const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
 
+  //useMemo는 리턴값만을 가져오기 때문에 함수형으로 쓰면 안된다
+
   return (
     <div className="App">
-      <Lifecycle />
       <DirayEditor onCreate={onCreate} />
-      <div>전체일기:{data.length}</div>
-      <div>기분좋은 일기 수: {goodCount}</div>
-      <div>기분 좋은 날은 {goodRatio}%입니다</div>
-      <div>별로 였던 날의 일기수 : {badCount}</div>
+      <div>📖: {data.length}개</div>
+      <div>HAPPY DAY : {goodRatio}%</div>
+      <div>😊 : {goodCount}개</div>
+      <div>😑: {badCount}개</div>
       <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
     </div>
   );
@@ -154,3 +158,4 @@ export default App;
     return { goodCount, badCount, goodRatio }; //객체로 리턴
   };
 */
+//useMemo로 값 만을 계속 보내줌 → 연산최적화
