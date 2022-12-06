@@ -1,8 +1,8 @@
 import "./App.css";
 import DirayEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useRef } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
+
 // import OptimizeTest from "./OptimizeTest";
 // import Lifecycle from "./Lifecycle";
 
@@ -40,8 +40,46 @@ import { useRef } from "react";
 //   },
 // ];
 
+
+//2개의 인자를 사용
+const reducer=(state, action)=>{
+  //어떤 타입의 액션(동작)이 있는지 확인
+  switch(action.type){
+    case 'INIT' :{
+      return action.data   //위의 액션에서 꺼내온것! 새로운 state가 되는것 
+    }
+    case 'CREATE':{
+      const created_date=new Date().getTime();
+      const newItem={
+        ...action.data,
+        created_date
+      }
+      return [newItem, ...state];
+    }
+    case 'REMOVE':{
+      return state.filter((it)=> it.id!==action.targetId);
+    }
+    //수정을 하게 되면 매칭할 id와 안의 새로운 컨텐츠가 전달됨
+    //기존 스테이트에서 맵함수를 사용하여 1. 타켓 id와 일치하는 요소를 찾고
+    //2.그 요소의 값에서 컨텐츠→ 뉴컨텐츠로 수정하고 나머지 요소는 그대로 돌려주고(false일때 it)
+    //새로 변경된 뉴 콘텐츠를 map함수때문에 배열로 보내주었음 
+    case 'EDIT':{//3항연산
+      return state.map((it)=>
+        it.id===action.targetId ? 
+        {...it, content:action.newContent}: it);
+  }
+    default:
+      return state;
+      //디폴트 상태에서는 상태변화가 없는 것으로 생각하여 변화 동작을 주지 않음 
+}};
+
+
+
 function App() {
-  const [data, setData] = useState([]);
+  //const [data, setData] = useState([]);
+  //reducer 상태변화를 핸들링하는 함수
+  //복잡한 상태변화를 로직에서 분리하기 위해 리듀서를 사용한다 그래서 app 컴퍼넌트 밖에다가 만듬 
+  const [data, dispatch]=useReducer(reducer, []);
   const dataId = useRef(0);
 
   //더미json에서 데이터 추출
@@ -65,7 +103,9 @@ function App() {
         id: dataId.current++,
       };
     });
-    setData(initData);
+    //셋데이터의 일을 디스패치의 init이 진행함
+    dispatch({type:"INIT",data:initData})     //객체로 인자를 넘져줌 case문에 맞는 
+    //setData(initData);
   };
 
   useEffect(() => {
@@ -75,24 +115,26 @@ function App() {
   //useCallback 의존배열이 변화가 있다면 안의 콜백함수가 변화한다
   //마운트(최초생성)되었을 때 1번만 만들고 그뒤로는 재사용할 수 있도록 세팅 (useCallback)
   const onCreate = useCallback((author, content, emotion) => {
-    const created_date = new Date().getTime();
-    const newItem = {
-      author,
-      content,
-      emotion,
-      created_date,
-      id: dataId.current,
-    };
+    //setData부분에 함수형을 전달하여 사용
+    dispatch({type:'CREATE', 
+              data:{author, content, emotion, id:dataId.current}})
+    // const created_date = new Date().getTime();
+    // const newItem = {
+    //   author,
+    //   content,
+    //   emotion,
+    //   created_date,
+    //   id: dataId.current,
+    // };
     dataId.current += 1;
     //setData([newItem, ...data]);
     //뉴아이템을 먼저 보여주고, 기존 데이터들을(useState에 사용한) 나중에 세팅
     //[나는 객체또는 배열사용하니까 꼭 []을 잊지말자@!@ 제발 ㅠㅠ]
-
-    //setData부분에 함수형을 전달하여 사용
-    setData((data) => [newItem, ...data]);
+    // setData((data) => [newItem, ...data]);
   }, []);
 
   const onRemove = useCallback((targetId) => {
+    dispatch({type:"REMOVE",targetId})
     console.log(`onRemove에서 ${targetId}가 삭제  `);
     //const newDiaryList = data.filter((it) => it.id !== targetId);
     //필터로 새로운 배열을 바로 만들어 주었음
@@ -100,23 +142,24 @@ function App() {
     //이걸 위에 셋함수에 어레이를 다시 보내줌
 
     //셋데이터함수 임자로 최신 스테이터스를 이용하기 위해서는 함수형 업데이트에 인자부분으 사용 리턴 부분을 사용함
-    setData((data) => data.filter((it) => it.id !== targetId));
+    // setData((data) => data.filter((it) => it.id !== targetId));
     //console.log(newDiaryList);
   }, []);
 
   //여기에 매개변수를 쓰는 이유? 자식이 어떤 데이터를 보낼 지 모르니까(forgin_key 정도??)
   //맵을 통해 for처럼 순회하면서 새로운 배열을 만든다
   const onEdit = useCallback((targetId, newContent) => {
-    setData(
-      (data) =>
-        data.map((it) =>
-          it.id === targetId ? { ...it, content: newContent } : it
-        )
-      //id가 수정하는 타켓의 id와 같다면 수정→
+    dispatch({type:"EDIT", targetId, newContent});
+    // setData(
+    //   (data) =>
+    //     data.map((it) =>
+    //       it.id === targetId ? { ...it, content: newContent } : it
+    //     )
+    //   //id가 수정하는 타켓의 id와 같다면 수정→
       // it의 모든 배열을 다불러오고 content는 newContente로 변경
       //: 이걸 왜쓰는지 모르네~
       //id가 맞지 않는다면 원래 있던 걸로 대체하겠음
-    );
+    //);
   }, []);
   //useMemo 1인자 콜백함수, 배열전달(의존성배열이 변화가 있다면 콜백함수에 영향을 미친다) 배열에 변화가 없다면 더이상 계산하지 않고 같은 값을 보여줌
   //그런데 useMemo를 사용한다면 더이상 getDiaryAnalysis더이상 함수의 기능을 잃게됨 memoization 되었기 때문에 리턴값도 고정 함수(동작)으로의 기능을 잃게됨
@@ -139,6 +182,7 @@ function App() {
   //useMemo는 리턴값만을 가져오기 때문에 함수형으로 쓰면 안된다
 
   return (
+
     <div className="App">
       <DirayEditor onCreate={onCreate} />
       <div>📖: {data.length}개</div>
@@ -148,9 +192,10 @@ function App() {
       <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
     </div>
   );
-}
-//배열을 프롭으로 전달
+};
 export default App;
+
+
 
 /*memoization?? 연산의 최적화
 이미 계산 해본 연산 결과를 기억해 두었다가
