@@ -1,3 +1,87 @@
+@import url("https://fonts.googleapis.com/css2?family=Hahmlet&family=Nanum+Myeongjo&display=swap");
+/* font-family: "Hahmlet", serif;
+  font-family: "Nanum Myeongjo", serif; */
+
+/* 전체 폰트 사용 */
+body {
+  background-color: #f9f6f6;
+  display: flex;
+  justify-content: center;
+  /* flex 일때 세로축을 중심으로 가운데 두겠다 */
+  align-items: center;
+  font-family: "Nanum Myeongjo";
+  min-height: 100vh;
+  margin: 0px;
+}
+/* 미디어 쿼리 650이상일때만 규칙이 적용됨 */
+@media (min-width: 650px) {
+  .App {
+    width: 640px;
+  }
+}
+/* 스크린이 650이하 지금 보이는 화면의 90을보여준다*/
+@media (max-width: 650px) {
+  .App {
+    width: 90vw;
+  }
+}
+#root {
+  background-color: white;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 20px 0px;
+  border-radius: 3px;
+}
 .App {
-  padding: 20px;
+  min-height: 85vh;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* ====Btn===== */
+.MyButton {
+  cursor: pointer;
+  border: none;
+  border-radius: 7px;
+  padding: 10px 20px 10px 20px;
+  font-size: 18px;
+  /* 안의 글자가 짤려서 2줄이 되지 않도록  */
+  white-space: nowrap;
+  font-family: "Hahmlet", serif;
+}
+.MyButton_default {
+  background-color: #f1f1f1;
+  color: black;
+}
+.MyButton_positive {
+  background-color: #ccc;
+  color: black;
+}
+.MyButton_negative {
+  background-color: rgb(114, 114, 114);
+  color: white;
+}
+/* Header */
+header {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+header > div {
+  display: flex;
+}
+header .head_text {
+  width: 50%;
+  font-size: 25px;
+  justify-content: center;
+}
+header .head_btn_left {
+  width: 25%;
+  justify-content: start;
+}
+header .head_btn_right {
+  width: 25%;
+  justify-content: end;
+  font-family: "Hahmlet";
 }
