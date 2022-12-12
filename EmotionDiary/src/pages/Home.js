@@ -10,9 +10,9 @@ const Home = () => {
   const [data, setData] = useState([]);
   const [curDate, setCurDate] = useState(new Date());
   //배열로 요일 구하기
-  const getDayKorea = (cur) => {
+  const getDayKorea = (curDay) => {
     let week = ["일", "월", "화", "수", "목", "금", "토"];
-    return week[cur];
+    return week[curDay];
   };
   const headText = `${curDate.getFullYear()}년 ${
     curDate.getMonth() + 1

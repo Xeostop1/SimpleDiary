@@ -178,3 +178,176 @@ header .head_btn_right {
 .DiaryItem .btn_wrapper {
   min-width: 70px;
 }
+/* =====DiaryEditor====== */
+.DiaryEditor {
+}
+.DiaryEditor section {
+  margin-bottom: 40px;
+}
+
+.DiaryEditor h4 {
+  font-size: 22px;
+  font-weight: bold;
+}
+.DiaryEditor .input_date {
+  border: none;
+  border-radius: 5px;
+  background-color: #ececec;
+  padding: var(--padding-basic);
+  cursor: pointer;
+  font-family: var(--font-total);
+  font-size: 20px;
+}
+
+.DiaryEditor .emotion_list_wrapper {
+  display: grid;
+  /* 5개를 정렬 */
+  grid-template-columns: repeat(5, auto);
+  /* padding, margin */
+  gap: 2%;
+}
+
+.DiaryEditor textarea {
+  font-family: var(--font-contect);
+  font-size: 20px;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 200px;
+  /* 상하로만 사이즈 조절이 가능함 */
+  resize: vertical;
+  border: none;
+  border-radius: 3px;
+  background-color: #ececec;
+  padding: var(--padding-basic);
+}
+.DiaryEditor .control_box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ==========Emotion Item=========== */
+.EmotionItem {
+  cursor: pointer;
+  border-radius: 55px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  height: 80px;
+}
+.EmotionItem img {
+  margin-top: 20px;
+  width: 70px;
+  margin-bottom: 10px;
+}
+.EmotionItem span {
+  font-size: 18px;
+}
+.EmotionItem_off {
+  background-color: #ececec;
+}
+.EmotionItem_on_1 {
+  transform: scale(1.1);
+  transition: 0.8s;
+  background-color: #33e03362;
+  font-weight: bold;
+}
+.EmotionItem_on_2 {
+  transform: scale(1.1);
+  transition: 0.8s;
+  background-color: #4fe24f55;
+  font-weight: bold;
+}
+.EmotionItem_on_3 {
+  transform: scale(1.1);
+  transition: 0.8s;
+  background-color: #e5ec278b;
+  font-weight: bold;
+}
+.EmotionItem_on_4 {
+  transform: scale(1.1);
+  transition: 0.8s;
+  background-color: #e6ab2155;
+  font-weight: bold;
+}
+.EmotionItem_on_5 {
+  transform: scale(1.1);
+  transition: 0.8s;
+  background-color: #dc242455;
+  font-weight: bold;
+}
+
+/* =====DiaryPage Emotion====== */
+.DiaryPage {
+  width: 100%;
+  margin-bottom: 100px;
+  display: flex;
+  /* 세로배치 */
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.DiaryPage h4 {
+  font-size: 22px;
+  font-weight: bold;
+}
+.DiaryPage .diary_img_wrapper {
+  /* background-color: #ececec; */
+  width: 260px;
+  height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  border-radius: 200px;
+}
+.DiaryPage .emotion_descript {
+  font-size: 25px;
+  color: white;
+  margin-top: -40px;
+  font-weight: bold;
+}
+.DiaryPage .diary_img_wrapper_1 {
+  background-color: #33e03362;
+}
+.DiaryPage .diary_img_wrapper_2 {
+  background-color: #4fe24f55;
+}
+.DiaryPage .diary_img_wrapper_3 {
+  background-color: #e5ec278b;
+}
+.DiaryPage .diary_img_wrapper_4 {
+  background-color: #e6ab2155;
+}
+.DiaryPage .diary_img_wrapper_5 {
+  background-color: #dc242455;
+}
+.DiaryPage .img_size {
+  width: 120px;
+  margin-top: 20px;
+}
+
+/* =====DiaryPage content====== */
+/* 부모요소가 넓이가 100이 되어야 textalign이 left가 가능함 */
+.DiaryPage .diary_content_wrapper {
+  width: 100%;
+  background-color: #ececec;
+  border-radius: 5px;
+  /* 줄바꿈한다면 단어를 쪼개서 줄바꿈 방지 */
+  word-break: keep-all;
+  /* 길이가 너무 길다면 단어를 끊어서 강제 줄바꿈 한다*/
+  overflow-wrap: break-word;
+}
+.DiaryPage .diary_content_wrapper p {
+  padding: 20px;
+  text-align: left;
+  font-size: 20px;
+  font-family: var(--font-contect);
+  font-weight: 400;
+  /* 지금은 줄간격으로 사용됨 */
+  line-height: 2.5;
+}

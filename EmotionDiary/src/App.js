@@ -161,8 +161,8 @@ function App() {
           <div className="App">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/new " element={<New />} />
-              <Route path="/edit" element={<Edit />} />
+              <Route path="/new" element={<New />} />
+              <Route path="/edit/:id" element={<Edit />} />
               <Route path="/diary/:id" element={<Diary />} />
             </Routes>
           </div>
@@ -174,6 +174,7 @@ function App() {
 
 export default App;
 
+///edit/:id"   pat h베리어블을 지정
 //경로에 따라서 맵핑함
 //a태그는 외부 url 사용시에만 사용예정
 

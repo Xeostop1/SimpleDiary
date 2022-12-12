@@ -38,4 +38,4 @@ const DiaryItem = ({ id, emotion, date, content }) => {
 };
 export default DiaryItem;
 //<img src={process.env.PUBLIC_URL + `assets/emotion${emotion}.png`}/>
-//빨리해야 되는데 ㅠㅠ 
+//빨리해야 되는데 ㅠㅠ
